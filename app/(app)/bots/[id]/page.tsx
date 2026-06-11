@@ -11,6 +11,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { DocumentsPanel } from "@/components/app/documents-panel";
+import { ChatPanel } from "@/components/app/chat-panel";
 import { EditBotForm } from "./edit-bot-form";
 import { DeleteBotButton } from "./delete-bot-button";
 
@@ -63,6 +64,19 @@ export default async function BotPage({
       </h1>
 
       <div className="mt-8 flex flex-col gap-6">
+        <Card>
+          <CardHeader>
+            <CardTitle>Test chat</CardTitle>
+            <CardDescription>
+              Ask a question the way your clients will. Answers come only from
+              this bot&apos;s documents.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <ChatPanel botId={bot.id} welcomeMessage={bot.welcome_message} />
+          </CardContent>
+        </Card>
+
         <Card>
           <CardHeader>
             <CardTitle>Settings</CardTitle>
