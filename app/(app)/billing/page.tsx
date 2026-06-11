@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
+import { getOrCreateWorkspace } from "@/lib/workspace";
 import { Badge } from "@/components/ui/badge";
 import {
   Card,
@@ -13,13 +14,9 @@ export default async function BillingPage() {
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  const { data: workspace } = await supabase
-    .from("workspaces")
-    .select("plan")
-    .eq("owner_id", user!.id)
-    .single();
+  const workspace = await getOrCreateWorkspace(supabase, user!.id);
 
-  const plan = workspace?.plan ?? "free";
+  const plan = workspace.plan;
 
   return (
     <div className="mx-auto max-w-2xl px-8 py-8">

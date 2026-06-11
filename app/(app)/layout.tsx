@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { getOrCreateWorkspace } from "@/lib/workspace";
 import { Sidebar } from "@/components/app/sidebar";
 
 export default async function AppLayout({
@@ -15,6 +16,9 @@ export default async function AppLayout({
   if (!user) {
     redirect("/login");
   }
+
+  // Ensure the workspace exists before any app page renders.
+  await getOrCreateWorkspace(supabase, user.id);
 
   return (
     <div className="flex min-h-screen flex-1">

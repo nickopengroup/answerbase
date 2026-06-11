@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
+import { getOrCreateWorkspace } from "@/lib/workspace";
 
 const HEX_COLOR = /^#[0-9a-fA-F]{6}$/;
 
@@ -47,14 +48,7 @@ export async function createBot(
     return { error: "Your session expired. Please sign in again." };
   }
 
-  const { data: workspace } = await supabase
-    .from("workspaces")
-    .select("id")
-    .eq("owner_id", user.id)
-    .single();
-  if (!workspace) {
-    return { error: "We couldn't find your workspace. Please try again." };
-  }
+  const workspace = await getOrCreateWorkspace(supabase, user.id);
 
   const { error } = await supabase.from("bots").insert({
     workspace_id: workspace.id,

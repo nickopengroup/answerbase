@@ -1,27 +1,16 @@
--- Answerbase — migration 0002: auto-create a workspace on user signup.
--- One workspace per owner (MVP); a trigger creates it atomically so the app
--- never has to special-case "first login".
+-- Answerbase — migration 0002: one workspace per owner.
+-- Workspace creation itself is handled in the app (get-or-create on first
+-- authed request) rather than a trigger on auth.users: creating triggers on
+-- auth.users is restricted on Supabase and not worth the fragility. This
+-- constraint keeps the "one workspace per user" invariant and makes the
+-- app's get-or-create race-safe via ON CONFLICT. Safe to re-run.
 
--- Exactly one workspace per user.
-alter table workspaces
-  add constraint workspaces_owner_id_unique unique (owner_id);
-
--- Create the workspace as the auth user is inserted.
-create or replace function public.handle_new_user()
-returns trigger
-language plpgsql
-security definer
-set search_path = public
-as $$
+do $$
 begin
-  insert into public.workspaces (owner_id, name, plan)
-  values (new.id, 'My workspace', 'free')
-  on conflict (owner_id) do nothing;
-  return new;
-end;
-$$;
-
-create trigger on_auth_user_created
-  after insert on auth.users
-  for each row
-  execute function public.handle_new_user();
+  if not exists (
+    select 1 from pg_constraint where conname = 'workspaces_owner_id_unique'
+  ) then
+    alter table workspaces
+      add constraint workspaces_owner_id_unique unique (owner_id);
+  end if;
+end $$;
