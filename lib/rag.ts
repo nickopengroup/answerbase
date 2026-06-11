@@ -8,13 +8,17 @@ import { embed } from "./embeddings";
  * honestly (no LLM call) and the question is logged as a knowledge gap.
  */
 
-// Cosine similarity below this means "not in the knowledge base".
-// The embedding model has a high baseline (~0.47 for unrelated text), so a
-// low threshold never refuses; observed separation is in-scope ~0.70 vs
-// off-topic ~0.47-0.50. Set to 0.55; recalibrated against the golden set in
-// Phase 8. Override per-deploy with SIMILARITY_THRESHOLD if needed.
+// Cosine similarity below this skips the LLM and refuses outright.
+// Golden-set calibration (Phase 8) showed in-scope (0.63–0.84) and off-topic
+// (0.60–0.71) similarities OVERLAP, so no single threshold separates them.
+// The robust refusal layer is the system prompt: the model is given the
+// context and instructed to return the fallback when the answer isn't there
+// (caught by isRefusal and logged as a gap). So the gate is deliberately LOW
+// (0.45) — it only hard-refuses clearly-unrelated questions, which keeps the
+// real risk for a demo (wrongly refusing a legitimately phrased question) low.
+// Env-overridable. Golden set stays 15/15 in-scope, 5/5 out-of-scope.
 export const SIMILARITY_THRESHOLD = Number(
-  process.env.SIMILARITY_THRESHOLD ?? 0.55,
+  process.env.SIMILARITY_THRESHOLD ?? 0.45,
 );
 
 export const FALLBACK_MESSAGE =
