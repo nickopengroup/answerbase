@@ -19,3 +19,18 @@ export interface Bot {
   public_token: string;
   created_at: string;
 }
+
+export type DocKind = "pdf" | "md" | "txt" | "gap_answer";
+export type DocStatus = "parsing" | "indexing" | "ready" | "error";
+
+export interface DocumentRow {
+  id: string;
+  bot_id: string;
+  filename: string;
+  kind: DocKind;
+  status: DocStatus;
+  error_message: string | null;
+  page_count: number;
+  storage_path: string | null;
+  created_at: string;
+}

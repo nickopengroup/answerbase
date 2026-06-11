@@ -70,3 +70,16 @@ export async function embed(texts: string[]): Promise<number[][]> {
   }
   return ordered.map((item) => item.embedding);
 }
+
+/** Embed many texts in batches, preserving order. */
+export async function embedBatched(
+  texts: string[],
+  batchSize = 64,
+): Promise<number[][]> {
+  const out: number[][] = [];
+  for (let i = 0; i < texts.length; i += batchSize) {
+    const batch = texts.slice(i, i + batchSize);
+    out.push(...(await embed(batch)));
+  }
+  return out;
+}

@@ -2,7 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
-import type { Bot } from "@/lib/types";
+import type { Bot, DocumentRow } from "@/lib/types";
 import {
   Card,
   CardContent,
@@ -10,6 +10,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { DocumentsPanel } from "@/components/app/documents-panel";
 import { EditBotForm } from "./edit-bot-form";
 import { DeleteBotButton } from "./delete-bot-button";
 
@@ -29,6 +30,19 @@ export default async function BotPage({
   if (!bot) {
     notFound();
   }
+
+  const { data: documents } = await supabase
+    .from("documents")
+    .select("id, filename, kind, status, error_message, page_count")
+    .eq("bot_id", bot.id)
+    .neq("kind", "gap_answer")
+    .order("created_at", { ascending: false })
+    .returns<
+      Pick<
+        DocumentRow,
+        "id" | "filename" | "kind" | "status" | "error_message" | "page_count"
+      >[]
+    >();
 
   return (
     <div className="mx-auto max-w-2xl px-8 py-8">
@@ -65,10 +79,13 @@ export default async function BotPage({
           <CardHeader>
             <CardTitle>Documents</CardTitle>
             <CardDescription>
-              Upload the documents your bot answers from. Coming in the next
-              step.
+              Upload the documents your bot answers from. They&apos;re parsed
+              and indexed automatically.
             </CardDescription>
           </CardHeader>
+          <CardContent>
+            <DocumentsPanel botId={bot.id} initialDocuments={documents ?? []} />
+          </CardContent>
         </Card>
 
         <Card className="border-danger/30">
