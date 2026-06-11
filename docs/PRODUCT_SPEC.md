@@ -35,7 +35,7 @@ Bot page → "Embed" tab → copy one `<script>` snippet → paste into any webs
 Dashboard → "Unanswered questions" → list of real end-user questions the bot could not answer → owner writes an answer inline → it is added to the knowledge base → bot can answer it from now on.
 
 ### J5 — Upgrade (owner)
-Hit a Free plan limit (clear in-app message, no dead ends) → pricing page → Stripe Checkout (test mode) → back in the app with Pro limits active.
+Hit a Free plan limit (clear in-app message, no dead ends) → pricing page → confirm the (mocked) upgrade → back in the app with Pro limits active. Billing is mocked per the assignment; no real payment is taken.
 
 ## Feature scope
 
@@ -50,7 +50,7 @@ Hit a Free plan limit (clear in-app message, no dead ends) → pricing page → 
 | Embeddable widget | One script tag, iframe-based, token-scoped to one bot |
 | Gap detection | Low-confidence / refused answers logged; owner can answer inline → answer joins the knowledge base |
 | Plans & gating | Free / Pro limits enforced in-app with friendly upgrade prompts |
-| Stripe billing | Stripe Checkout + customer portal, test mode |
+| Billing (mocked) | In-app upgrade/downgrade flips the plan; limits enforced for real; no payment processor (allowed by the assignment) |
 | Landing page | Niche-flavored copy, pricing section, demo CTA |
 
 ### Explicitly out of scope

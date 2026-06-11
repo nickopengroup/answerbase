@@ -8,7 +8,7 @@
 Project skeleton, tooling, deploy pipeline working end-to-end before any features.
 
 - `create-next-app` (TypeScript, App Router, Tailwind 4) + shadcn/ui init restyled to DESIGN.md tokens
-- Deps: `@openrouter/ai-sdk-provider`, `ai`, `zod`, `@supabase/ssr`, `@supabase/supabase-js`, `stripe`, `unpdf`
+- Deps: `@openrouter/ai-sdk-provider`, `ai`, `zod`, `@supabase/ssr`, `@supabase/supabase-js`, `unpdf` (billing is mocked, so no `stripe`)
 - Folder structure from ARCHITECTURE.md; `docs/` committed; `.env.example` with all variables
 - Supabase migration #1: full schema from ARCHITECTURE.md incl. pgvector extension, `match_chunks` RPC, RLS policies
 - **HUMAN:** create Supabase project, run migration, fill `.env.local` (Supabase keys, OpenRouter key)
@@ -50,13 +50,14 @@ Project skeleton, tooling, deploy pipeline working end-to-end before any feature
 
 **AC:** pasting the snippet into the plain HTML page shows a working widget; full ask-answer-sources flow works inside it; invalid token fails gracefully; widget matches DESIGN.md (sizes, animation, fallback style).
 
-## Phase 5 — Billing & limits
+## Phase 5 — Billing (mocked) & limits
 
-- **HUMAN:** Stripe test account, create Pro $29/mo price, copy keys + price ID; run `stripe listen` for local webhook
-- Checkout session (workspace metadata) → webhook updates `workspaces.plan`; Customer Portal link on Billing page
-- `lib/limits.ts` enforced server-side on upload + both chat routes; Billing page shows plan + usage meters (bots, pages, messages) with 80% warning and 100% block states; upgrade prompts per PRODUCT_SPEC
+- `lib/limits.ts` enforced server-side on upload + both chat routes; `PLANS` constant with Free/Pro limits from PRODUCT_SPEC; friendly 402-style JSON the UI renders as an upgrade prompt
+- Billing page shows current plan + usage meters (bots, pages, messages) with 80% warning and 100% block states; upgrade prompts per PRODUCT_SPEC
+- Mock upgrade: "Upgrade to Pro" → confirmation step → server action sets `workspaces.plan = 'pro'` (no Stripe). "Downgrade to Free" reverses it for the demo
+- No payment processor, no webhook, no HUMAN step
 
-**AC:** Free workspace hitting message limit gets blocked with an upgrade prompt (not an error); test-card checkout flips plan to Pro and limits expand without re-login; "Powered by" disappears from the widget on Pro; subscription cancel in Portal downgrades the plan via webhook.
+**AC:** Free workspace hitting the message limit gets blocked with an upgrade prompt (not an error); clicking Upgrade flips the plan to Pro and limits expand without re-login; "Powered by" disappears from the widget on Pro; Downgrade returns the workspace to Free limits.
 
 ## Phase 6 — Gap detection loop
 

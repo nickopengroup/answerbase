@@ -8,7 +8,7 @@
 - **DB / Auth / Storage / Vectors:** Supabase (Postgres + pgvector + Auth + Storage).
 - **LLM:** Claude Sonnet via **OpenRouter**, using Vercel AI SDK (`@openrouter/ai-sdk-provider`) for streaming chat.
 - **Embeddings:** via **OpenRouter's embeddings endpoint** (OpenAI-compatible `/api/v1/embeddings`), model `google/gemini-embedding-2` with `dimensions: 1536` requested explicitly — pgvector indexes cap at 2000 dims, so never use the model's native 3072. Isolated in `lib/embeddings.ts` behind a single `embed(texts: string[]): number[][]` function; `EMBEDDING_DIM = 1536` constant drives the migration. Fallback if the dimensions param doesn't pass through OpenRouter: `baai/bge-m3` (1024 dims, update the constant + re-run migration). Nothing else in the codebase may call an embeddings API directly. One OpenRouter key covers both chat and embeddings.
-- **Billing:** Stripe Checkout + Customer Portal, test mode.
+- **Billing:** mocked, no payment processor. The assignment permits mock billing, so there is no Stripe account, Checkout, webhook, or Customer Portal. An in-app action flips `workspaces.plan` between `free` and `pro`. The valuable, graded part — plan limits and gating — is enforced for real server-side (`lib/limits.ts`).
 - **No queue infrastructure.** Document processing runs inside route handlers (`maxDuration = 60`), with status persisted in the DB and the client polling. Demo-scale documents make BullMQ-style workers unjustified complexity.
 
 ## Project structure
@@ -21,11 +21,10 @@ app/
   api/
     bots/ documents/ chat/        # authed API
     widget/[token]/chat/          # public widget API (token-scoped)
-    stripe/webhook/
 public/embed.js           # the one-line embed script
 lib/
   embeddings.ts  rag.ts  chunking.ts  parsing.ts
-  limits.ts  stripe.ts  supabase/ (server & browser clients)
+  limits.ts  supabase/ (server & browser clients)
 docs/                     # PRODUCT_SPEC, ARCHITECTURE, DESIGN, PLAN, CONTENT
 supabase/migrations/
 ```
@@ -34,7 +33,7 @@ supabase/migrations/
 
 ```
 workspaces      id, owner_id (auth.users), name, plan ('free'|'pro'),
-                stripe_customer_id, stripe_subscription_id, created_at
+                created_at
 
 bots            id, workspace_id, name, welcome_message, accent_color,
                 public_token (unique, url-safe), created_at
@@ -90,13 +89,14 @@ When the owner answers a gap question: create (or reuse) a per-bot document `kin
 - iframe approach = zero CORS issues for the chat itself; `embed.js` is a static file. Parent↔iframe communication (open/close/unread) via `postMessage`.
 - The widget API (`/api/widget/[token]/chat`) is unauthenticated by design, scoped by token, and protected by the workspace's message limits + basic per-token rate limiting.
 
-## Billing (Stripe test mode)
+## Billing (mocked)
 
-1. One product, one price: Pro $29/mo subscription.
-2. Upgrade → create Checkout Session (`workspace_id` in metadata) → redirect.
-3. Webhook (`checkout.session.completed`, `customer.subscription.updated`, `customer.subscription.deleted`) → set `workspaces.plan` accordingly. Webhook is the single source of truth for plan changes.
-4. "Manage billing" → Stripe Customer Portal session.
-5. Local dev: `stripe listen --forward-to localhost:3000/api/stripe/webhook`.
+The assignment explicitly allows mock billing, so there is no payment processor. The point we keep is real: limits and gating are enforced server-side; only the money movement is faked.
+
+1. One plan to upgrade to: Pro, displayed at $29/mo (copy only, never charged).
+2. Upgrade → a server action sets `workspaces.plan = 'pro'` directly (a mock "checkout confirmed" step), then redirects back with limits already expanded.
+3. Downgrade → a server action sets `workspaces.plan = 'free'` (keeps the demo reversible).
+4. The plan is read straight from `workspaces.plan`; no external source of truth, no webhook.
 
 ## Limits enforcement (`lib/limits.ts`)
 
@@ -110,8 +110,8 @@ One module, used by upload and chat routes:
 ```
 NEXT_PUBLIC_SUPABASE_URL / NEXT_PUBLIC_SUPABASE_ANON_KEY / SUPABASE_SERVICE_ROLE_KEY
 OPENROUTER_API_KEY        # chat + embeddings
-STRIPE_SECRET_KEY / STRIPE_WEBHOOK_SECRET / NEXT_PUBLIC_STRIPE_PRICE_PRO
 NEXT_PUBLIC_APP_URL
+# Billing is mocked — no Stripe keys.
 ```
 
 ## Non-negotiables for the agent

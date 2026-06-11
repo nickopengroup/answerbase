@@ -3,21 +3,23 @@
 
 -- ---------------------------------------------------------------------------
 -- Extensions
+-- On Supabase the vector extension lives in the `extensions` schema; install
+-- it there and put that schema on the search path so vector(N), the cosine
+-- operator (<=>), and vector_cosine_ops all resolve below.
 -- ---------------------------------------------------------------------------
-create extension if not exists vector;
+create extension if not exists vector with schema extensions;
+set search_path = public, extensions;
 
 -- ---------------------------------------------------------------------------
 -- Tables
 -- ---------------------------------------------------------------------------
 
 create table workspaces (
-  id                     uuid primary key default gen_random_uuid(),
-  owner_id               uuid not null references auth.users (id) on delete cascade,
-  name                   text not null default 'My workspace',
-  plan                   text not null default 'free' check (plan in ('free', 'pro')),
-  stripe_customer_id     text,
-  stripe_subscription_id text,
-  created_at             timestamptz not null default now()
+  id         uuid primary key default gen_random_uuid(),
+  owner_id   uuid not null references auth.users (id) on delete cascade,
+  name       text not null default 'My workspace',
+  plan       text not null default 'free' check (plan in ('free', 'pro')),
+  created_at timestamptz not null default now()
 );
 
 create table bots (
