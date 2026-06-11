@@ -1,0 +1,11 @@
+# Normalize line endings to LF in the repository across platforms.
+* text=auto eol=lf
+
+# Binary files Git should not touch.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.webp binary
+*.ico binary
+*.pdf binary
