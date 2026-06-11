@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/card";
 import { DocumentsPanel } from "@/components/app/documents-panel";
 import { ChatPanel } from "@/components/app/chat-panel";
+import { EmbedSnippet } from "@/components/app/embed-snippet";
 import { EditBotForm } from "./edit-bot-form";
 import { DeleteBotButton } from "./delete-bot-button";
 
@@ -99,6 +100,21 @@ export default async function BotPage({
           </CardHeader>
           <CardContent>
             <DocumentsPanel botId={bot.id} initialDocuments={documents ?? []} />
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Embed</CardTitle>
+            <CardDescription>
+              Add the chat widget to your website with one line of code.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <EmbedSnippet
+              appUrl={process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000"}
+              token={bot.public_token}
+            />
           </CardContent>
         </Card>
 

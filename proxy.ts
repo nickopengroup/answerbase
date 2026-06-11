@@ -9,9 +9,10 @@ export async function proxy(request: NextRequest) {
 export const config = {
   matcher: [
     /*
-     * Run on every path except static assets, the embed script, and image
-     * files — otherwise auth redirects could block CSS/JS/images.
+     * Run on every path except static assets, the embed script, image files,
+     * and the public widget surfaces (/w and /api/widget) which are
+     * unauthenticated by design and must not be touched by the auth proxy.
      */
-    "/((?!_next/static|_next/image|favicon.ico|embed.js|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
+    "/((?!_next/static|_next/image|favicon.ico|embed.js|w/|api/widget/|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
   ],
 };
