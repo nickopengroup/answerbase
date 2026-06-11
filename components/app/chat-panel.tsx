@@ -144,7 +144,7 @@ export function ChatPanel({
                     key={name}
                     className="rounded-md bg-muted px-2 py-0.5 text-xs text-muted-foreground"
                   >
-                    {name}
+                    {name.replace(/\.[^.]+$/, "")}
                   </span>
                 ))}
               </div>

@@ -150,21 +150,19 @@ export function WidgetChat({
             }
           >
             <div
-              className="max-w-[85%] rounded-xl px-3 py-2 text-[15px] leading-relaxed"
+              className={
+                msg.role === "user"
+                  ? "max-w-[85%] rounded-xl px-3 py-2 text-[15px] leading-relaxed"
+                  : "max-w-[85%] rounded-xl border border-border bg-background px-3 py-2 text-[15px] leading-relaxed text-ink"
+              }
               style={
                 msg.role === "user"
                   ? { backgroundColor: `${accentColor}1A`, color: "#18181b" }
                   : undefined
               }
             >
-              {msg.role === "assistant" ? (
-                <div className="rounded-xl border border-border bg-background px-3 py-2 text-ink">
-                  {msg.pending ? (
-                    <TypingDots />
-                  ) : (
-                    <span className="whitespace-pre-wrap">{msg.content}</span>
-                  )}
-                </div>
+              {msg.pending ? (
+                <TypingDots />
               ) : (
                 <span className="whitespace-pre-wrap">{msg.content}</span>
               )}
@@ -176,7 +174,7 @@ export function WidgetChat({
                     key={s}
                     className="rounded-md bg-muted px-2 py-0.5 text-xs text-muted-foreground"
                   >
-                    {s}
+                    {s.replace(/\.[^.]+$/, "")}
                   </span>
                 ))}
               </div>
