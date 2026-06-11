@@ -3,6 +3,8 @@ import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { kindFromFilename } from "@/lib/parsing";
+import { checkLimit, getUsage, planLimit } from "@/lib/limits";
+import type { Plan } from "@/lib/types";
 
 export const runtime = "nodejs";
 
@@ -35,11 +37,23 @@ export async function POST(request: Request) {
 
   const { data: bot } = await supabase
     .from("bots")
-    .select("id")
+    .select("id, workspace_id, workspaces!inner(plan)")
     .eq("id", botId)
     .single();
   if (!bot) {
     return NextResponse.json({ error: "Bot not found." }, { status: 404 });
+  }
+
+  // Enforce the document-pages limit (server-side).
+  const plan = (bot.workspaces as unknown as { plan: Plan }).plan;
+  const usage = await getUsage(supabase, bot.workspace_id as string);
+  if (!checkLimit(usage, plan, "pages").allowed) {
+    return NextResponse.json(
+      {
+        error: `You've reached your ${planLimit(plan, "pages")}-page limit. Upgrade to Pro on the Billing page to add more documents.`,
+      },
+      { status: 402 },
+    );
   }
 
   const kind = kindFromFilename(file.name);

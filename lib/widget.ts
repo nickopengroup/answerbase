@@ -6,6 +6,7 @@ export interface WidgetBot {
   name: string;
   welcomeMessage: string;
   accentColor: string;
+  workspaceId: string;
   plan: Plan;
 }
 
@@ -41,6 +42,7 @@ export async function resolveWidgetBot(
     name: bot.name,
     welcomeMessage: bot.welcome_message,
     accentColor: bot.accent_color,
+    workspaceId: bot.workspace_id,
     plan: (ws?.plan ?? "free") as Plan,
   };
 }

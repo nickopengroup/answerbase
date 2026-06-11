@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
 import { handleChat } from "@/lib/chat";
+import { checkLimit, getUsage, limitedChatResponse } from "@/lib/limits";
+import type { Plan } from "@/lib/types";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
@@ -30,16 +32,26 @@ export async function POST(request: Request) {
 
   const { data: bot } = await supabase
     .from("bots")
-    .select("id, name")
+    .select("id, name, workspace_id, workspaces!inner(plan)")
     .eq("id", botId)
     .single();
   if (!bot) {
     return NextResponse.json({ error: "Bot not found." }, { status: 404 });
   }
 
+  // Enforce the monthly message limit (server-side). Friendly, not an error.
+  const plan = (bot.workspaces as unknown as { plan: Plan }).plan;
+  const usage = await getUsage(supabase, bot.workspace_id as string);
+  if (!checkLimit(usage, plan, "messages").allowed) {
+    return limitedChatResponse(
+      `You've used all ${usage.messages} messages this month. Upgrade to Pro on the Billing page to keep chatting.`,
+      conversationId ?? null,
+    );
+  }
+
   return handleChat({
     db: supabase,
-    bot,
+    bot: { id: bot.id as string, name: bot.name as string },
     question,
     conversationId: conversationId ?? null,
     channel: "app",

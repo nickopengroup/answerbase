@@ -3,6 +3,7 @@ import { z } from "zod";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { resolveWidgetBot, widgetRateLimited } from "@/lib/widget";
 import { handleChat } from "@/lib/chat";
+import { checkLimit, getUsage, limitedChatResponse } from "@/lib/limits";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
@@ -39,6 +40,15 @@ export async function POST(
   const parsed = bodySchema.safeParse(await request.json().catch(() => null));
   if (!parsed.success) {
     return NextResponse.json({ error: "Invalid request." }, { status: 400 });
+  }
+
+  // Enforce the workspace's monthly message limit (end-user friendly).
+  const usage = await getUsage(admin, bot.workspaceId);
+  if (!checkLimit(usage, bot.plan, "messages").allowed) {
+    return limitedChatResponse(
+      "Thanks for your question. Our assistant has reached its limit for now — please reach out to our team directly and we'll be glad to help.",
+      parsed.data.conversationId ?? null,
+    );
   }
 
   return handleChat({

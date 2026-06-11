@@ -6,6 +6,7 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
 import { getOrCreateWorkspace } from "@/lib/workspace";
+import { checkLimit, getUsage, planLimit } from "@/lib/limits";
 
 const HEX_COLOR = /^#[0-9a-fA-F]{6}$/;
 
@@ -49,6 +50,13 @@ export async function createBot(
   }
 
   const workspace = await getOrCreateWorkspace(supabase, user.id);
+
+  const usage = await getUsage(supabase, workspace.id);
+  if (!checkLimit(usage, workspace.plan, "bots").allowed) {
+    return {
+      error: `Your ${workspace.plan === "free" ? "Free" : "Pro"} plan includes ${planLimit(workspace.plan, "bots")} ${planLimit(workspace.plan, "bots") === 1 ? "bot" : "bots"}. Upgrade on the Billing page to add more.`,
+    };
+  }
 
   const { error } = await supabase.from("bots").insert({
     workspace_id: workspace.id,
