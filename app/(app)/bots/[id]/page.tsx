@@ -13,6 +13,7 @@ import {
 import { DocumentsPanel } from "@/components/app/documents-panel";
 import { ChatPanel } from "@/components/app/chat-panel";
 import { EmbedSnippet } from "@/components/app/embed-snippet";
+import { GapsPanel, type Gap } from "@/components/app/gaps-panel";
 import { EditBotForm } from "./edit-bot-form";
 import { DeleteBotButton } from "./delete-bot-button";
 
@@ -46,6 +47,27 @@ export default async function BotPage({
       >[]
     >();
 
+  const { data: gapRows } = await supabase
+    .from("gap_questions")
+    .select("id, question, created_at, conversations(channel)")
+    .eq("bot_id", bot.id)
+    .eq("status", "open")
+    .order("created_at", { ascending: false });
+
+  const gaps: Gap[] = (gapRows ?? []).map((row) => {
+    const convo = row.conversations as
+      | { channel: "app" | "widget" }
+      | { channel: "app" | "widget" }[]
+      | null;
+    const channel = Array.isArray(convo) ? (convo[0]?.channel ?? null) : (convo?.channel ?? null);
+    return {
+      id: row.id as string,
+      question: row.question as string,
+      channel,
+      createdAt: row.created_at as string,
+    };
+  });
+
   return (
     <div className="mx-auto max-w-2xl px-8 py-8">
       <Link
@@ -75,6 +97,26 @@ export default async function BotPage({
           </CardHeader>
           <CardContent>
             <ChatPanel botId={bot.id} welcomeMessage={bot.welcome_message} />
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>
+              Unanswered questions
+              {gaps.length > 0 ? (
+                <span className="ml-2 rounded-md bg-brand-soft px-1.5 py-0.5 text-xs font-medium text-brand-hover">
+                  {gaps.length}
+                </span>
+              ) : null}
+            </CardTitle>
+            <CardDescription>
+              Questions your bot couldn&apos;t answer. Answer one and it joins
+              the bot&apos;s knowledge instantly.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <GapsPanel initialGaps={gaps} />
           </CardContent>
         </Card>
 
