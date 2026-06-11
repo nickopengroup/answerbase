@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
 export default function Home() {
@@ -13,13 +14,13 @@ export default function Home() {
           chat inside the app and an embeddable widget for your website.
         </p>
         <div className="mt-8 flex items-center justify-center gap-3">
-          <Button size="lg" disabled>
-            Coming soon
+          <Button size="lg" render={<Link href="/signup" />}>
+            Get started
+          </Button>
+          <Button size="lg" variant="secondary" render={<Link href="/login" />}>
+            Sign in
           </Button>
         </div>
-        <p className="mt-10 text-xs text-muted-foreground">
-          Phase 0 scaffold — the product is being built phase by phase.
-        </p>
       </div>
     </main>
   );
