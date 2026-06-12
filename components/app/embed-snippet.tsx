@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Check, Copy } from "lucide-react";
+import { Check, Copy, ExternalLink } from "lucide-react";
 import { toast } from "sonner";
 
 export function EmbedSnippet({
@@ -44,11 +44,21 @@ export function EmbedSnippet({
           {copied ? "Copied" : "Copy"}
         </button>
       </div>
-      <p className="text-sm text-muted-foreground">
-        Paste this before the closing <code className="text-ink">&lt;/body&gt;</code>{" "}
-        tag on your website. The widget uses your bot&apos;s accent color, set
-        in Settings.
-      </p>
+      <div className="flex items-center justify-between gap-4">
+        <p className="text-sm text-muted-foreground">
+          Paste this before the closing{" "}
+          <code className="text-ink">&lt;/body&gt;</code> tag on your website.
+        </p>
+        <a
+          href={`/preview/${token}`}
+          target="_blank"
+          rel="noreferrer"
+          className="inline-flex h-9 shrink-0 items-center gap-1.5 rounded-md border border-border bg-background px-3 text-sm font-medium text-ink transition-colors hover:bg-muted"
+        >
+          <ExternalLink className="size-4" />
+          Preview widget
+        </a>
+      </div>
     </div>
   );
 }

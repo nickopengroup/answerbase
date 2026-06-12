@@ -60,7 +60,8 @@ export async function handleChat(opts: {
     conversationId: convoId,
     topSimilarity: retrieval.topSimilarity,
     refused: refuse,
-    sources: refuse ? [] : retrieval.sources.map((s) => s.name),
+    // Show only the few most relevant sources (already in similarity order).
+    sources: refuse ? [] : retrieval.sources.slice(0, 3).map((s) => s.name),
   };
 
   // Refusal gate: skip the LLM, answer honestly, log the gap.
