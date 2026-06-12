@@ -25,7 +25,7 @@ export const FALLBACK_MESSAGE =
   "I don't have this in the knowledge base yet. The team has been notified.";
 
 const CHAT_MODEL =
-  process.env.OPENROUTER_CHAT_MODEL ?? "anthropic/claude-sonnet-4.6";
+  process.env.OPENROUTER_CHAT_MODEL ?? "deepseek/deepseek-v4-flash";
 
 export interface RetrievedChunk {
   id: string;

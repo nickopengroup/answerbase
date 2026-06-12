@@ -32,7 +32,8 @@ a chat inside the app and an embeddable widget for the company's website.
   shadcn/ui (restyled to the design tokens)
 - **Data / Auth / Storage / Vectors:** Supabase (Postgres + pgvector + Auth +
   Storage)
-- **LLM:** Claude Sonnet 4.6 via OpenRouter, streamed with the Vercel AI SDK
+- **LLM:** DeepSeek V4 Flash via OpenRouter, streamed with the Vercel AI SDK
+  (the chat model is configurable via `OPENROUTER_CHAT_MODEL`)
 - **Embeddings:** `google/gemini-embedding-2` (1536-dim) via OpenRouter,
   isolated behind `lib/embeddings.ts`
 - **Hosting:** Vercel
