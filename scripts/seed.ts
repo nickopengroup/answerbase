@@ -144,7 +144,7 @@ async function main() {
       name: "Ledgerly Assistant",
       welcome_message:
         "Hi! I'm Ledgerly's assistant. Ask me about our services, pricing, or deadlines.",
-      accent_color: "#047857",
+      accent_color: "#2E5A45",
       public_token: randomBytes(16).toString("base64url"),
     })
     .select("id, public_token")

@@ -8,7 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 
 // On-brand accent presets — no purple per docs/DESIGN.md.
 const PRESETS = [
-  "#047857", // emerald (default)
+  "#2E5A45", // emerald (default)
   "#1D4ED8", // blue
   "#0F766E", // teal
   "#B45309", // amber
@@ -25,7 +25,7 @@ interface BotFieldsProps {
 }
 
 export function BotFields({ defaults }: BotFieldsProps) {
-  const [color, setColor] = useState(defaults?.accent_color ?? "#047857");
+  const [color, setColor] = useState(defaults?.accent_color ?? "#2E5A45");
 
   return (
     <div className="flex flex-col gap-4">

@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Answerbase — Your documents, answering your customers</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&display=swap" rel="stylesheet" />
+<style>
+:root{
+  --paper:#F4F1E8; --paper2:#ECE7DA; --card:#FBFAF5; --ink:#1C1A14; --mid:#5A574C; --faint:#8C8979;
+  --line:rgba(28,26,20,.16); --line2:rgba(28,26,20,.28); --acc:#2E5A45; --accsoft:#E1E8E0;
+}
+*{ box-sizing:border-box; }
+html{ scroll-behavior:smooth; }
+body{ margin:0; background:var(--paper); color:var(--ink); font-family:'Archivo',system-ui,sans-serif; -webkit-font-smoothing:antialiased; overflow-x:hidden; }
+.serif{ font-family:'Newsreader',serif; }
+.wrap{ width:min(1200px,92vw); margin:0 auto; }
+a{ color:inherit; }
+.ey{ font-size:11.5px; letter-spacing:.22em; text-transform:uppercase; color:var(--acc); font-weight:600; display:inline-flex; align-items:center; gap:11px; }
+.ey::before{ content:''; width:22px; height:1px; background:var(--acc); }
+.ey.c::before{ display:none; }
+
+/* nav */
+.nav{ position:sticky; top:0; z-index:50; height:78px; border-bottom:1px solid var(--line2); display:flex; align-items:center; background:rgba(244,241,232,.86); backdrop-filter:blur(12px); }
+.nav .wrap{ display:flex; align-items:center; justify-content:space-between; }
+.brand{ display:flex; align-items:center; gap:12px; text-decoration:none; }
+.brand .mk{ width:30px; height:30px; border-radius:50%; border:1.5px solid var(--acc); color:var(--acc); display:flex; align-items:center; justify-content:center; font-family:'Newsreader',serif; font-size:17px; font-style:italic; }
+.brand b{ font-family:'Newsreader',serif; font-size:23px; font-weight:500; letter-spacing:-.01em; }
+.navlinks{ display:flex; gap:30px; align-items:center; }
+.navlinks a{ font-size:14.5px; color:var(--ink); text-decoration:none; font-weight:500; white-space:nowrap; transition:color .15s; }
+.navlinks a:hover{ color:var(--acc); }
+.btn{ font-family:'Archivo'; font-size:14.5px; font-weight:600; padding:11px 22px; border-radius:40px; border:1px solid var(--ink); background:transparent; color:var(--ink); cursor:pointer; text-decoration:none; display:inline-block; transition:.18s; }
+.btn:hover{ background:var(--ink); color:var(--paper); transform:translateY(-1px); }
+.btn-acc{ background:var(--acc); border-color:var(--acc); color:#fff; }
+.btn-acc:hover{ background:#234936; border-color:#234936; color:#fff; box-shadow:0 10px 26px rgba(46,90,69,.22); }
+.btn-paper{ background:var(--paper); border-color:var(--paper); color:var(--ink); }
+.btn-paper:hover{ background:#fff; border-color:#fff; color:var(--ink); }
+
+/* hero */
+.hero{ padding:84px 0 26px; }
+.hero .top{ text-align:center; max-width:980px; margin:0 auto; }
+h1{ font-family:'Newsreader',serif; font-weight:400; font-size:clamp(44px,6.6vw,84px); line-height:1.02; letter-spacing:-.02em; margin:26px 0 0; }
+h1 em{ font-style:italic; color:var(--acc); }
+.lede{ font-size:clamp(17px,2.1vw,20px); line-height:1.55; color:var(--mid); max-width:620px; margin:28px auto 0; }
+.heroctas{ display:flex; gap:13px; margin-top:34px; justify-content:center; flex-wrap:wrap; }
+.trust{ margin-top:30px; font-size:13px; color:var(--faint); letter-spacing:.04em; }
+.heroimg{ margin-top:56px; }
+
+/* chat card */
+.chat{ background:var(--card); border:1px solid var(--line2); border-radius:14px; overflow:hidden; box-shadow:0 30px 70px rgba(28,26,20,.14); max-width:760px; margin:0 auto; }
+.chat .top{ display:flex; align-items:center; justify-content:space-between; padding:16px 22px; border-bottom:1px solid var(--line); }
+.chat .top .l{ display:flex; align-items:center; gap:11px; font-size:13.5px; color:var(--mid); }
+.chat .top .l .av{ width:26px; height:26px; border-radius:50%; background:var(--accsoft); color:var(--acc); display:flex; align-items:center; justify-content:center; font-family:'Newsreader',serif; font-style:italic; font-size:14px; }
+.chat .top .st{ font-size:12px; color:var(--acc); display:flex; gap:7px; align-items:center; }
+.chat .top .st::before{ content:''; width:7px; height:7px; border-radius:50%; background:var(--acc); }
+.chatbody{ padding:28px; display:grid; grid-template-columns:1fr 1fr; gap:28px; align-items:center; }
+.q{ display:flex; justify-content:flex-end; }
+.q span{ display:inline-block; background:var(--paper2); border-radius:16px 16px 4px 16px; padding:14px 18px; font-size:16px; line-height:1.45; }
+.a-label{ font-size:11px; letter-spacing:.18em; text-transform:uppercase; color:var(--acc); font-weight:600; margin-bottom:10px; }
+.a-txt{ font-family:'Newsreader',serif; font-size:20px; line-height:1.45; }
+.a-txt b{ font-weight:600; color:var(--acc); }
+.cite{ margin-top:16px; display:flex; align-items:center; gap:11px; flex-wrap:wrap; }
+.cite .chip{ font-size:12px; color:var(--acc); border:1px solid var(--acc); border-radius:40px; padding:5px 12px; display:inline-flex; gap:7px; align-items:center; font-weight:500; }
+.cite .lab{ font-size:12px; color:var(--faint); font-style:italic; font-family:'Newsreader',serif; }
+
+/* steps */
+.steps{ padding:54px 0 70px; }
+.stephead{ text-align:center; max-width:720px; margin:0 auto 50px; }
+.stephead h2{ font-family:'Newsreader',serif; font-weight:400; font-size:clamp(34px,4.4vw,52px); line-height:1.05; letter-spacing:-.02em; margin:16px 0 0; }
+.stephead h2 em{ font-style:italic; color:var(--acc); }
+.stephead p{ font-size:18px; color:var(--mid); line-height:1.55; margin:18px auto 0; max-width:560px; }
+.srow{ display:grid; grid-template-columns:repeat(3,1fr); gap:0; border-top:1px solid var(--line2); }
+.step{ padding:36px 32px 38px; border-right:1px solid var(--line); }
+.step:last-child{ border-right:none; }
+.step .num{ font-family:'Newsreader',serif; font-style:italic; font-size:40px; color:var(--acc); line-height:1; }
+.step h3{ font-family:'Newsreader',serif; font-weight:500; font-size:26px; letter-spacing:-.01em; margin:14px 0 10px; }
+.step p{ font-size:15px; line-height:1.6; color:var(--mid); margin:0 0 24px; }
+
+/* mini ui */
+.ui{ background:var(--card); border:1px solid var(--line2); border-radius:11px; overflow:hidden; }
+.ui .bar{ display:flex; align-items:center; gap:8px; padding:10px 14px; border-bottom:1px solid var(--line); font-size:12px; color:var(--faint); font-weight:500; }
+.ui .bar .d{ width:7px; height:7px; border-radius:50%; background:var(--line2); }
+.frow{ display:flex; align-items:center; gap:12px; padding:12px 14px; border-bottom:1px solid var(--line); font-size:13.5px; }
+.frow:last-child{ border-bottom:none; }
+.frow .ic{ width:26px; height:30px; border-radius:4px; background:var(--paper2); border:1px solid var(--line); flex:0 0 auto; }
+.frow .nm{ flex:1; } .frow .nm b{ font-weight:600; display:block; } .frow .nm small{ color:var(--faint); font-size:11px; }
+.stat{ font-size:11px; padding:4px 10px; border-radius:40px; font-weight:600; white-space:nowrap; }
+.stat.ok{ color:var(--acc); background:var(--accsoft); }
+.stat.idx{ color:var(--mid); background:var(--paper2); }
+.askbar{ display:flex; align-items:center; gap:10px; padding:12px 14px; border-bottom:1px solid var(--line); }
+.askbar .inp{ flex:1; font-size:14px; color:var(--mid); font-family:'Newsreader',serif; font-style:italic; }
+.askbar .send{ width:28px; height:28px; border-radius:50%; background:var(--acc); color:#fff; display:flex; align-items:center; justify-content:center; font-size:13px; flex:0 0 auto; }
+.ans{ padding:14px; font-size:13.5px; line-height:1.55; color:var(--ink); font-family:'Newsreader',serif; }
+.ans .src{ margin-top:10px; font-family:'Archivo'; font-size:10.5px; color:var(--acc); border:1px solid var(--acc); border-radius:40px; display:inline-block; padding:3px 10px; letter-spacing:.04em; }
+.embed{ font-family:'Archivo'; font-size:12px; padding:15px; line-height:1.7; color:var(--mid); word-break:break-word; }
+.embed .tag{ color:var(--acc); font-weight:600; }
+.widgetwrap{ position:relative; height:104px; border-top:1px solid var(--line); background:var(--paper2); }
+.widgetwrap .bub{ position:absolute; right:14px; bottom:14px; width:46px; height:46px; border-radius:50%; background:var(--acc); color:#fff; display:flex; align-items:center; justify-content:center; font-family:'Newsreader',serif; font-style:italic; box-shadow:0 8px 24px rgba(46,90,69,.3); }
+.widgetwrap .mini{ position:absolute; right:14px; bottom:70px; width:172px; border:1px solid var(--line2); background:var(--card); border-radius:12px; padding:11px; font-size:12px; line-height:1.45; font-family:'Newsreader',serif; }
+
+/* honest */
+.honest{ background:var(--ink); color:var(--paper); padding:90px 0; }
+.honest .wrap{ display:grid; grid-template-columns:1.05fr .95fr; gap:64px; align-items:center; }
+.honest .ey{ color:#A9C4B5; } .honest .ey::before{ background:#A9C4B5; }
+.honest h2{ font-family:'Newsreader',serif; font-weight:400; font-size:clamp(36px,4.8vw,56px); line-height:1.04; letter-spacing:-.02em; margin:18px 0 0; color:var(--paper); }
+.honest h2 em{ font-style:italic; color:#8FD3B3; }
+.checks{ list-style:none; padding:0; margin:32px 0 0; }
+.checks li{ display:flex; gap:16px; padding:18px 0; border-top:1px solid rgba(255,255,255,.14); font-size:17px; line-height:1.5; color:#E7E3D7; }
+.checks li .x{ font-family:'Newsreader',serif; font-style:italic; color:#8FD3B3; font-size:18px; }
+.refusal{ background:#23211A; border:1px solid rgba(255,255,255,.13); border-radius:14px; padding:26px; }
+.refusal .q{ margin-bottom:0; }
+.refusal .q span{ display:inline-block; background:#312E25; color:#E7E3D7; padding:14px 18px; border-radius:16px 16px 4px 16px; font-size:16px; }
+.refusal .deny{ background:rgba(143,211,179,.08); border:1px solid rgba(143,211,179,.28); border-radius:11px; padding:16px 18px; font-family:'Newsreader',serif; font-size:18px; line-height:1.5; color:#E7E3D7; margin-top:14px; }
+.refusal .deny b{ color:#8FD3B3; font-weight:600; }
+.refusal .glabel{ font-size:11px; letter-spacing:.16em; text-transform:uppercase; color:#8FD3B3; font-weight:600; margin:24px 0 6px; }
+.gaprow{ display:flex; align-items:center; justify-content:space-between; gap:14px; padding:13px 0; border-top:1px solid rgba(255,255,255,.12); font-size:14.5px; color:#E7E3D7; }
+.gaprow .answer{ font-size:12px; color:#8FD3B3; border:1px solid rgba(143,211,179,.4); border-radius:40px; padding:4px 12px; white-space:nowrap; cursor:pointer; transition:.15s; }
+.gaprow .answer:hover{ background:rgba(143,211,179,.14); }
+.gaprow .ct{ font-size:12px; color:#8C8979; font-style:italic; font-family:'Newsreader',serif; white-space:nowrap; }
+
+/* pricing */
+.pricing{ padding:84px 0; }
+.prices{ display:grid; grid-template-columns:1fr 1fr; gap:24px; margin-top:48px; }
+.plan{ background:var(--card); border:1px solid var(--line2); border-radius:16px; padding:40px; position:relative; }
+.plan.pro{ background:var(--ink); color:var(--paper); border-color:var(--ink); }
+.plan .pname{ display:flex; align-items:baseline; justify-content:space-between; gap:12px; }
+.plan .pname b{ font-family:'Newsreader',serif; font-size:28px; font-weight:500; }
+.plan.pro .pname b{ color:var(--paper); }
+.plan .tag{ font-size:11px; letter-spacing:.12em; color:var(--ink); background:#8FD3B3; border-radius:40px; padding:5px 12px; font-weight:600; white-space:nowrap; }
+.plan .muted{ font-size:13px; color:var(--faint); font-style:italic; font-family:'Newsreader',serif; }
+.price{ font-family:'Newsreader',serif; font-size:60px; font-weight:400; letter-spacing:-.02em; margin:18px 0 2px; }
+.price small{ font-family:'Archivo'; font-size:15px; font-weight:500; color:var(--mid); letter-spacing:0; }
+.plan.pro .price small{ color:#B9BBAE; }
+.plan ul{ list-style:none; padding:0; margin:26px 0 30px; }
+.plan ul li{ font-size:15.5px; padding:13px 0; border-top:1px solid var(--line); display:flex; gap:13px; align-items:center; }
+.plan.pro ul li{ border-top:1px solid rgba(255,255,255,.14); color:#E7E3D7; }
+.plan ul li .ck{ color:var(--acc); font-family:'Newsreader',serif; font-style:italic; }
+.plan.pro ul li .ck{ color:#8FD3B3; }
+.plan .btn{ width:100%; text-align:center; }
+
+/* final */
+.final{ text-align:center; padding:96px 0 100px; border-top:1px solid var(--line2); }
+.final h2{ font-family:'Newsreader',serif; font-weight:400; font-size:clamp(40px,6vw,72px); line-height:1.04; letter-spacing:-.02em; margin:0 auto; max-width:900px; }
+.final h2 em{ font-style:italic; color:var(--acc); }
+.final p{ font-size:19px; color:var(--mid); margin:24px 0 36px; }
+.foot{ border-top:1px solid var(--line2); padding:34px 0; }
+.foot .wrap{ display:flex; align-items:center; justify-content:space-between; gap:20px; flex-wrap:wrap; }
+.foot .c{ font-size:13px; color:var(--faint); font-style:italic; font-family:'Newsreader',serif; }
+.foot .fl{ display:flex; gap:26px; }
+.foot .fl a{ font-size:13.5px; color:var(--mid); text-decoration:none; font-weight:500; }
+.foot .fl a:hover{ color:var(--acc); }
+
+/* responsive */
+@media (max-width:900px){
+  .navlinks .nl{ display:none; }
+  .chatbody{ grid-template-columns:1fr; }
+  .srow{ grid-template-columns:1fr; }
+  .step{ border-right:none; border-bottom:1px solid var(--line); }
+  .step:last-child{ border-bottom:none; }
+  .honest .wrap{ grid-template-columns:1fr; gap:40px; }
+  .prices{ grid-template-columns:1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="wrap">
+    <a class="brand" href="#"><span class="mk">A</span><b>Answerbase</b></a>
+    <div class="navlinks">
+      <span class="nl" style="display:contents"><a href="#how">How it works</a><a href="#honest">Honesty</a><a href="#pricing">Pricing</a><a href="#">Sign in</a></span>
+      <a href="#" class="btn btn-acc">Start free</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="wrap">
+    <div class="top">
+      <div class="ey c">An assistant built from your own documents</div>
+      <h1>Your documents,<br/>answering <em>your customers.</em></h1>
+      <p class="lede">Answerbase turns the FAQs, guides and policies you already have into a chat assistant on your site — so customers get precise answers in seconds, and your team stops repeating itself.</p>
+      <div class="heroctas">
+        <a href="#" class="btn btn-acc">Start free</a>
+        <a href="#pricing" class="btn">See pricing</a>
+      </div>
+      <div class="trust">No credit card · Live in minutes · Cancel anytime</div>
+    </div>
+    <div class="heroimg">
+      <div class="chat">
+        <div class="top">
+          <span class="l"><span class="av">A</span> Meridian Advisory · assistant</span>
+          <span class="st">Online</span>
+        </div>
+        <div class="chatbody">
+          <div class="q"><span>How much is the Pro plan, and what's included?</span></div>
+          <div>
+            <div class="a-label">Answered from your documents</div>
+            <div class="a-txt">The <b>Pro plan is $29/month</b>: 3 assistants, 500 pages of documents and 2,000 messages a month.</div>
+            <div class="cite"><span class="chip">↳ pricing.pdf · p. 2</span><span class="lab">source cited</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- STEPS -->
+<section class="steps" id="how">
+  <div class="wrap">
+    <div class="stephead">
+      <div class="ey c" style="justify-content:center">Getting started</div>
+      <h2>A live assistant in <em>three steps.</em></h2>
+      <p>No setup calls, no training datasets, no ML jargon. Bring the documents you already have — that's all it takes.</p>
+    </div>
+    <div class="srow">
+      <div class="step">
+        <div class="num">i.</div>
+        <h3>Upload your documents</h3>
+        <p>FAQs, price lists, policies — whatever you already have. PDF, Markdown or plain text. Answerbase parses and indexes each file, with a status for every one.</p>
+        <div class="ui">
+          <div class="bar"><span class="d"></span> Documents</div>
+          <div class="frow"><div class="ic"></div><div class="nm"><b>Price list 2026.pdf</b><small>PDF · 4 pages</small></div><span class="stat ok">Ready</span></div>
+          <div class="frow"><div class="ic"></div><div class="nm"><b>Service terms.md</b><small>MD · 11 KB</small></div><span class="stat ok">Ready</span></div>
+          <div class="frow"><div class="ic"></div><div class="nm"><b>Onboarding guide.txt</b><small>TXT · 6 KB</small></div><span class="stat idx">Indexing…</span></div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="num">ii.</div>
+        <h3>Test it in the dashboard</h3>
+        <p>Ask the way your customers ask. Every answer comes only from your documents and cites its source — so you see exactly what a customer will get.</p>
+        <div class="ui">
+          <div class="bar"><span class="d"></span> Playground</div>
+          <div class="askbar"><span class="inp">Can I get a refund for this month?</span><span class="send">→</span></div>
+          <div class="ans">Yes. Refunds for the unused period are issued within 14 days on a written request.<br/><span class="src">↳ Service terms · §4.2</span></div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="num">iii.</div>
+        <h3>Drop it on your site</h3>
+        <p>Copy one line of code and the widget appears on your site in your brand colour. Customers ask in the corner — you do nothing.</p>
+        <div class="ui">
+          <div class="bar"><span class="d"></span> Embed snippet</div>
+          <div class="embed"><span class="tag">&lt;script</span> src="answerbase.io/w.js" data-bot="meridian"<span class="tag">&gt;&lt;/script&gt;</span></div>
+          <div class="widgetwrap"><div class="mini">Hi! How can I help with Meridian's documents?</div><div class="bub">A</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HONEST -->
+<section class="honest" id="honest">
+  <div class="wrap">
+    <div>
+      <div class="ey">Never makes things up</div>
+      <h2>When it doesn't know,<br/><em>it says so.</em></h2>
+      <ul class="checks">
+        <li><span class="x">—</span>No invented prices, dates or terms — the answer is either in your documents or it isn't.</li>
+        <li><span class="x">—</span>Every unanswered question is saved, not lost in a thread.</li>
+        <li><span class="x">—</span>You answer once, and the assistant knows it from that moment on.</li>
+      </ul>
+    </div>
+    <div class="refusal">
+      <div class="q"><span>Do you offer a discount for nonprofits?</span></div>
+      <div class="deny">That's <b>not in your documents</b>, so I won't guess — I've saved the question for the owner.</div>
+      <div class="glabel">Gaps in your knowledge base</div>
+      <div class="gaprow"><span>Discount for nonprofits?</span><span class="answer">Answer →</span></div>
+      <div class="gaprow"><span>Is there a team plan?</span><span class="ct">asked ×7</span></div>
+      <div class="gaprow"><span>Weekend support?</span><span class="ct">asked ×3</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="pricing" id="pricing">
+  <div class="wrap">
+    <div class="stephead" style="margin-bottom:0">
+      <div class="ey c" style="justify-content:center">Pricing</div>
+      <h2>Simple <em>plans.</em></h2>
+      <p>Start free. Move to Pro when customers start keeping your assistant busy.</p>
+    </div>
+    <div class="prices">
+      <div class="plan">
+        <div class="pname"><b>Free</b><span class="muted">to get started</span></div>
+        <div class="price">$0<small> / forever</small></div>
+        <ul>
+          <li><span class="ck">✦</span>1 assistant</li>
+          <li><span class="ck">✦</span>20 pages of documents</li>
+          <li><span class="ck">✦</span>100 messages per month</li>
+          <li><span class="ck">✦</span>“Powered by Answerbase” badge</li>
+        </ul>
+        <a href="#" class="btn">Start free</a>
+      </div>
+      <div class="plan pro">
+        <div class="pname"><b>Pro</b><span class="tag">Most popular</span></div>
+        <div class="price">$29<small> / month</small></div>
+        <ul>
+          <li><span class="ck">✦</span>3 assistants</li>
+          <li><span class="ck">✦</span>500 pages of documents</li>
+          <li><span class="ck">✦</span>2,000 messages per month</li>
+          <li><span class="ck">✦</span>No Answerbase branding</li>
+        </ul>
+        <a href="#" class="btn btn-paper">Start free</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL -->
+<section class="final">
+  <div class="wrap">
+    <div class="ey c" style="justify-content:center;margin-bottom:22px">Stop repeating yourself</div>
+    <h2>Stop answering the same <em>questions.</em></h2>
+    <p>Build your assistant in minutes and hand it the routine.</p>
+    <a href="#" class="btn btn-acc" style="font-size:16px;padding:15px 32px">Start free</a>
+  </div>
+</section>
+
+<footer class="foot">
+  <div class="wrap">
+    <a class="brand" href="#"><span class="mk" style="width:26px;height:26px;font-size:15px">A</span><b style="font-size:20px">Answerbase</b></a>
+    <div class="fl"><a href="#how">How it works</a><a href="#pricing">Pricing</a><a href="#">Privacy</a><a href="#">Contact</a></div>
+    <span class="c">© 2026 · Documents that answer your customers</span>
+  </div>
+</footer>
+
+</body>
+</html>

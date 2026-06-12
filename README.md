@@ -12,8 +12,11 @@ a chat inside the app and an embeddable widget for the company's website.
 
 ## What it does
 
-- **Create a bot** and upload your documents (PDF, Markdown, or text). They're
-  parsed, chunked, and embedded automatically, with a visible status per file.
+- **Create a bot in a 3-step wizard** — upload documents, then a name and
+  welcome message arrive prefilled (auto-generated from the content), then try
+  it in an embedded chat with one-click **suggested questions** generated from
+  your docs (and editable on the bot page). Documents (PDF, Markdown, or text)
+  are parsed, chunked, and embedded automatically with a visible status per file.
 - **Chat grounded in your docs.** Answers cite the source document they came
   from. When the answer isn't in your documents, the bot says so honestly
   instead of guessing.
@@ -70,6 +73,7 @@ npm install
    order:
    - `supabase/migrations/0001_init.sql`
    - `supabase/migrations/0002_workspace_on_signup.sql`
+   - `supabase/migrations/0003_suggested_questions.sql`
 
    Then turn **off** email confirmation (Authentication → Sign In / Providers →
    Email → "Confirm email") so sign-up logs in immediately. For production,

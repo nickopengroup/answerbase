@@ -63,7 +63,7 @@ export async function createDraftBot(): Promise<{
       workspace_id: workspace.id,
       name: DRAFT_NAME,
       welcome_message: DEFAULT_WELCOME,
-      accent_color: "#047857",
+      accent_color: "#2E5A45",
       public_token: randomBytes(16).toString("base64url"),
     })
     .select("id, public_token")

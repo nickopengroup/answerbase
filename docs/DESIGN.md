@@ -1,37 +1,41 @@
 # Answerbase — Design System
 
-> Direction: clean product. White surfaces, ink typography, one confident accent, high copy quality. Reference feel: Linear / Stripe docs — calm, dense where it matters, zero decoration for decoration's sake.
-> This doc exists because "default AI output" look is an explicit rejection criterion. When in doubt, remove rather than add.
+> Direction: **warm editorial**. Paper neutrals, a single forest-green accent, serif display headings over a clean sans for body and UI. Calm and confident, with character — not the flat "default AI output" look (an explicit rejection criterion). When in doubt, remove rather than add.
+> The marketing landing carries the fullest expression of this (paper background, serif headlines with italic green emphasis, hand-set mini-UI mockups); the app applies it more lightly (white/paper surfaces, serif page titles, forest accent) so it stays dense and readable.
 
 ## Tokens
 
-Define as Tailwind 4 `@theme` variables. shadcn components are restyled to these tokens, never used with stock colors.
+Define as Tailwind 4 `@theme` variables (see `app/globals.css`). shadcn components are restyled to these tokens, never used with stock colors. The landing has its own scoped palette in `app/(marketing)/landing.css`.
 
 ### Color
 
+App tokens:
 ```
 --background        #FFFFFF
---surface           #FAFAF9   (cards, sidebar — warm gray, not blue-gray)
---ink               #18181B   (primary text)
---muted             #71717A   (secondary text)
---border            #E7E5E4
---accent            #047857   (emerald 700 — actions, links, focus)
---accent-hover      #065F46
---accent-soft       #ECFDF5   (selected states, badges)
---danger            #B91C1C
---warning           #B45309   (usage meters near limit)
+--surface           #FAF8F1   (cards, sidebar — warm paper)
+--ink               #1C1A14   (primary text, warm near-black)
+--muted-foreground  #5A574C   (secondary text)
+--border            #E6E1D4
+--brand / accent    #2E5A45   (forest green — actions, links, focus)
+--brand-hover       #234936
+--brand-soft        #E1E8E0   (selected states, badges, chips)
+--danger            #B3402E
+--warning           #9A6A16   (usage meters near limit)
 ```
+
+Landing palette (scoped `.lp`): `--paper #F4F1E8`, `--paper2 #ECE7DA`, `--card #FBFAF5`, `--ink #1C1A14`, `--mid #5A574C`, `--acc #2E5A45`, with the dark "honest" section on `--ink`.
 
 Rules:
 - Accent is for interactive elements and key numbers only. If a screen is >10% green, it's wrong.
-- No gradients anywhere. No purple. No glassmorphism, no glow, no floating 3D shapes.
-- Dark UI only in one place: code/snippet blocks (embed code) on `--ink` background — this contrast is intentional and makes the embed step feel "developer-real".
+- No gradients anywhere. **No purple.** No glassmorphism, no glow, no floating 3D shapes.
+- Dark UI in two intentional places: code/snippet blocks on `--ink`, and the landing's "honest" section (ink background, mint-green accents).
 
 ### Typography
 
-- One family: **Inter** (or Geist if already installed), all weights from 400/500/600. No serif, no display font.
+- Two families: **Archivo** (sans — body, UI, buttons) and **Newsreader** (serif — display headings, with italic for emphasis). Geist Mono only inside code/snippet blocks.
+- Serif is for page titles (`h1`/`h2`) and landing display; card titles, labels, and dense UI stay in Archivo. Don't set forms or controls in serif.
 - Scale: 15px base in the app (denser, product feel), 17–18px base on the landing.
-- Headings: 600 weight, tight tracking (`-0.02em`), never uppercase.
+- Serif headings: 400–500 weight, tight tracking (`-0.02em`), italic green for the one emphasized phrase. Sans headings (h3/h4): 600 weight. Never uppercase except eyebrow labels (uppercase, letter-spaced, green).
 - Numbers in usage meters and pricing: `tabular-nums`.
 
 ### Shape & depth
@@ -50,11 +54,13 @@ Rules:
 
 ## Per-surface rules
 
-### Landing
-- Hero: one headline (max 8 words), one subline (max 2 sentences), one CTA, and a real product screenshot — not an illustration. No "trusted by" fake logos.
-- Sections in order: hero → how it works (3 steps with real UI crops) → gap detection feature (the differentiator gets its own section) → pricing → final CTA. Nothing else; no testimonial fabrication, no FAQ unless time remains.
-- Copy voice: written to a firm owner, plain words. Say "Your clients ask the same questions every tax season" — not "Revolutionize your client communication with AI".
-- Pricing table mirrors PRODUCT_SPEC exactly. Free plan listed first, honestly.
+### Landing (editorial)
+- Paper background, serif (Newsreader) display headlines with one italic green-emphasized phrase; Archivo for body and buttons. Pill buttons (forest fill or ink outline). Eyebrow labels with a leading dash.
+- Hero: serif headline + one subline + two CTAs (Start free / See pricing) + a hand-set "chat card" mock showing a question, a cited answer, and a source chip — illustrative UI, not a raw screenshot. No "trusted by" fake logos.
+- Sections in order: hero → how it works (3 steps, roman numerals, each with a small UI mock: documents list, playground, embed snippet+widget) → "honest" differentiator (dark ink section: refusal + gap rows) → pricing → final CTA → footer.
+- Copy voice: written to a firm owner, plain words. Say "Your customers ask the same questions" — not "Revolutionize your client communication with AI".
+- Pricing mirrors PRODUCT_SPEC exactly. Free plan listed first, honestly; Pro card is the dark one.
+- Implementation: scoped styles in `app/(marketing)/landing.css` under `.lp`; the page is self-contained (no dependency on captured screenshots).
 
 ### App
 - Layout: left sidebar (bots, billing, settings) + content. No top-nav-plus-sidebar double chrome.
@@ -79,4 +85,5 @@ Rules:
 3. Buttons say what they do: "Copy embed code", not "Get started" everywhere.
 4. All four states exist for every async surface: empty / loading / error / success.
 5. Spacing is consistent on the 4px grid; nothing centered just because.
-6. Landing screenshot is the real product, current build — re-shoot it after UI changes.
+6. Serif is reserved for display/page titles; forms, controls, and dense UI stay in Archivo (sans).
+7. README product screenshots are the real, current build — re-capture after a visual change (`demo@answerbase.app`, then shoot the Test chat card and the widget preview).

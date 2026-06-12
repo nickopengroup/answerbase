@@ -19,7 +19,7 @@
   if (!token) return;
 
   var origin = new URL(script.src).origin;
-  var DEFAULT_ACCENT = "#047857";
+  var DEFAULT_ACCENT = "#2E5A45";
 
   function init(accent) {
     var open = false;

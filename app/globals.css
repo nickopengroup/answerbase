@@ -41,9 +41,10 @@
   --color-danger: var(--danger);
   --color-warning: var(--warning);
 
-  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-newsreader), ui-serif, Georgia, serif;
   --font-mono: var(--font-geist-mono), ui-monospace, monospace;
-  --font-heading: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-heading: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
 
   /* Radius — DESIGN: 8px controls, 12px cards, 999px launcher */
   --radius-sm: 6px;
@@ -58,34 +59,34 @@
 }
 
 :root {
-  /* DESIGN palette (docs/DESIGN.md) */
+  /* Editorial palette — warm paper neutrals, forest-green accent. */
   --background: #ffffff;
-  --foreground: #18181b; /* ink */
-  --ink: #18181b;
-  --surface: #fafaf9; /* warm gray cards, sidebar */
-  --brand: #047857; /* emerald 700 */
-  --brand-hover: #065f46;
-  --brand-soft: #ecfdf5;
-  --danger: #b91c1c;
-  --warning: #b45309;
+  --foreground: #1c1a14; /* ink */
+  --ink: #1c1a14;
+  --surface: #faf8f1; /* warm paper for cards / sidebar */
+  --brand: #2e5a45; /* forest green */
+  --brand-hover: #234936;
+  --brand-soft: #e1e8e0;
+  --danger: #b3402e;
+  --warning: #9a6a16;
 
-  /* shadcn semantic → DESIGN */
-  --card: #fafaf9;
-  --card-foreground: #18181b;
+  /* shadcn semantic → palette */
+  --card: #faf8f1;
+  --card-foreground: #1c1a14;
   --popover: #ffffff;
-  --popover-foreground: #18181b;
-  --primary: #047857; /* brand actions */
+  --popover-foreground: #1c1a14;
+  --primary: #2e5a45; /* brand actions */
   --primary-foreground: #ffffff;
   --secondary: #ffffff; /* white + border + ink secondary buttons */
-  --secondary-foreground: #18181b;
-  --muted: #fafaf9; /* row hover / subtle surface tint */
-  --muted-foreground: #71717a; /* DESIGN --muted text */
-  --accent: #ecfdf5; /* selected states / menu highlight = accent-soft */
-  --accent-foreground: #065f46;
-  --destructive: #b91c1c;
-  --border: #e7e5e4;
-  --input: #e7e5e4;
-  --ring: #047857; /* focus ring = accent */
+  --secondary-foreground: #1c1a14;
+  --muted: #f4f1e8; /* row hover / subtle paper tint */
+  --muted-foreground: #5a574c;
+  --accent: #e1e8e0; /* selected states / menu highlight */
+  --accent-foreground: #234936;
+  --destructive: #b3402e;
+  --border: #e6e1d4;
+  --input: #ddd7c8;
+  --ring: #2e5a45; /* focus ring = accent */
 
   --radius: 0.5rem;
 }
@@ -101,11 +102,16 @@
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
   }
+  /* Page titles in serif for an editorial feel; smaller headings stay sans. */
   h1,
-  h2,
+  h2 {
+    font-family: var(--font-serif);
+    font-weight: 500;
+    letter-spacing: -0.02em;
+  }
   h3,
   h4 {
     font-weight: 600;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.01em;
   }
 }

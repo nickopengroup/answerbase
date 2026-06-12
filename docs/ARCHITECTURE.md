@@ -36,7 +36,8 @@ workspaces      id, owner_id (auth.users), name, plan ('free'|'pro'),
                 created_at
 
 bots            id, workspace_id, name, welcome_message, accent_color,
-                public_token (unique, url-safe), created_at
+                public_token (unique, url-safe), suggested_questions (jsonb),
+                created_at
 
 documents       id, bot_id, filename, kind ('pdf'|'md'|'txt'|'gap_answer'),
                 status ('parsing'|'indexing'|'ready'|'error'),
@@ -80,6 +81,11 @@ usage           workspace_id, month ('YYYY-MM'), messages_used
 
 ### Gap answers → knowledge base (J4)
 When the owner answers a gap question: create (or reuse) a per-bot document `kind='gap_answer'`, filename "Owner answers"; append one chunk containing `Q: ... / A: ...`, embed it, mark the gap `answered`. The bot can answer this question from now on. Gap answers count as 1 page total, not per answer.
+
+## Onboarding & suggested questions
+
+- `lib/intro.ts` (`generateBotIntro`) samples the bot's chunks and asks the chat model for a one-sentence welcome plus 3–5 customer-style questions; each question is validated against retrieval (dropped if it would refuse), so a shipped chip never lands on the fallback. `POST /api/bots/[id]/generate-intro` persists `bots.suggested_questions` and overwrites `welcome_message` only when it still equals the product default. Triggered when documents settle (wizard + documents panel) and on delete.
+- The creation flow is a 3-step wizard at `/bots/new` (upload → personalize → try) using a lazy draft bot; it replaces the old create dialog. Suggested chips render in the wizard, the in-app test chat (empty state), and the widget (under the welcome). Chips send a normal message and disappear after the first message; owners can edit/remove/add/regenerate them on the bot page.
 
 ## Widget
 

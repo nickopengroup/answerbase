@@ -24,7 +24,7 @@ import { EmbedSnippet } from "@/components/app/embed-snippet";
 import { createDraftBot, updateBot } from "@/app/(app)/dashboard/actions";
 
 const DEFAULT_WELCOME = "Hi! Ask me anything about our services.";
-const PRESETS = ["#047857", "#1D4ED8", "#0F766E", "#B45309", "#BE123C", "#334155"];
+const PRESETS = ["#2E5A45", "#1D4ED8", "#0F766E", "#B45309", "#BE123C", "#334155"];
 
 interface DocItem {
   id: string;
@@ -53,7 +53,7 @@ export function BotWizard({ appUrl }: { appUrl: string }) {
 
   const [name, setName] = useState("Untitled bot");
   const [welcome, setWelcome] = useState(DEFAULT_WELCOME);
-  const [color, setColor] = useState("#047857");
+  const [color, setColor] = useState("#2E5A45");
   const welcomeEdited = useRef(false);
   const nameEdited = useRef(false);
 
