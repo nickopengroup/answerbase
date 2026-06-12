@@ -10,6 +10,7 @@ import { createClient } from "@supabase/supabase-js";
 import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
 import { processDocument } from "../lib/documents.ts";
 import { embed } from "../lib/embeddings.ts";
+import { generateBotIntro } from "../lib/intro.ts";
 import { LEDGERLY_DOCS, ANSWERED_GAPS, OPEN_GAP } from "./ledgerly-content.ts";
 
 const admin = createClient(
@@ -193,6 +194,17 @@ async function main() {
     question: OPEN_GAP,
     status: "open",
   });
+
+  // Generate suggested questions from the ingested content (keep the custom
+  // welcome message). Powers the chips on every chat surface.
+  console.log("Generating suggested questions…");
+  const intro = await generateBotIntro(admin, botId);
+  await admin
+    .from("bots")
+    .update({ suggested_questions: intro.questions })
+    .eq("id", botId);
+  console.log(`  ${intro.questions.length} questions:`);
+  intro.questions.forEach((q) => console.log(`    • ${q}`));
 
   console.log("\nSeed complete.");
   console.log(`  Demo login: ${DEMO_EMAIL} / ${DEMO_PASSWORD}`);

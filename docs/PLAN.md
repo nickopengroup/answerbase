@@ -83,3 +83,15 @@ Project skeleton, tooling, deploy pipeline working end-to-end before any feature
 - **HUMAN:** record the demo video; final Vercel deploy check
 
 **AC:** golden set: 15/15 in-scope answered correctly with right sources, 5/5 out-of-scope refused honestly; seeded demo account works on production URL; README lets a stranger run the project locally without asking questions.
+
+## Phase 9 — Onboarding & suggested questions
+
+- Migration: `bots.suggested_questions jsonb`
+- `lib/intro.ts` generates a welcome message + 3–5 suggested questions from the bot's chunks; each question validated via retrieval so a chip never refuses. `POST /api/bots/[id]/generate-intro` persists them (welcome only if still the product default)
+- Trigger generation when documents settle (wizard + documents panel) and on document delete
+- Bot creation wizard at `/bots/new` (replaces the create dialog): Step 1 upload (background processing, skip is secondary), Step 2 personalize (name/welcome/color prefilled), Step 3 try (embedded chat + suggested chips + embed snippet + go-to-bot). Lazy draft bot; dismissible; created state persists
+- Suggested chips on three surfaces: wizard Step 3, in-app test chat empty state, embedded widget (under the welcome). Click sends a normal message; chips disappear after the first message
+- Auto-generated welcome only fills where the owner hasn't written their own
+- Update PRODUCT_SPEC (J1 + scope), refresh landing screenshots and the demo script
+
+**AC:** new user signs up → "Create bot" → uploads one PDF → reaches Step 3 and gets a cited streamed answer by clicking a chip, under 2 minutes; chips appear and work on all three surfaces (every chip answers on the seeded demo bot); name + welcome prefilled in Step 2 and never overwrite owner edits; abandoning the wizard leaves a usable bot page; widget chips respect limits and vanish after the first message; anti-slop checklist passes.

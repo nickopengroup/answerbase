@@ -19,12 +19,14 @@ export function WidgetChat({
   welcomeMessage,
   accentColor,
   showPoweredBy,
+  suggestedQuestions = [],
 }: {
   token: string;
   name: string;
   welcomeMessage: string;
   accentColor: string;
   showPoweredBy: boolean;
+  suggestedQuestions?: string[];
 }) {
   const [messages, setMessages] = useState<Msg[]>([
     { id: 0, role: "assistant", content: welcomeMessage },
@@ -35,6 +37,9 @@ export function WidgetChat({
   const nextId = useRef(1);
   const scrollRef = useRef<HTMLDivElement>(null);
 
+  const showChips =
+    suggestedQuestions.length > 0 && !messages.some((m) => m.role === "user");
+
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight });
   }, [messages]);
@@ -43,8 +48,8 @@ export function WidgetChat({
     window.parent.postMessage({ type: "answerbase:close" }, "*");
   }
 
-  async function send() {
-    const question = input.trim();
+  async function send(textArg?: string) {
+    const question = (textArg ?? input).trim();
     if (!question || sending) return;
     setInput("");
     setSending(true);
@@ -181,6 +186,23 @@ export function WidgetChat({
             ) : null}
           </div>
         ))}
+
+        {showChips ? (
+          <div className="flex flex-col items-start gap-2 pt-1">
+            {suggestedQuestions.map((q) => (
+              <button
+                key={q}
+                type="button"
+                onClick={() => send(q)}
+                disabled={sending}
+                className="rounded-full border px-3 py-1.5 text-left text-sm transition-colors disabled:opacity-50"
+                style={{ borderColor: `${accentColor}40`, color: "#18181b" }}
+              >
+                {q}
+              </button>
+            ))}
+          </div>
+        ) : null}
       </div>
 
       {/* Composer */}

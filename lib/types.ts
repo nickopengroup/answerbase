@@ -17,6 +17,7 @@ export interface Bot {
   welcome_message: string;
   accent_color: string;
   public_token: string;
+  suggested_questions: string[];
   created_at: string;
 }
 

@@ -24,9 +24,11 @@ interface ChatMeta {
 export function ChatPanel({
   botId,
   welcomeMessage,
+  suggestedQuestions = [],
 }: {
   botId: string;
   welcomeMessage: string;
+  suggestedQuestions?: string[];
 }) {
   const [messages, setMessages] = useState<ChatMessage[]>([
     { id: 0, role: "assistant", content: welcomeMessage },
@@ -37,12 +39,15 @@ export function ChatPanel({
   const nextId = useRef(1);
   const scrollRef = useRef<HTMLDivElement>(null);
 
+  const showChips =
+    suggestedQuestions.length > 0 && !messages.some((m) => m.role === "user");
+
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight });
   }, [messages]);
 
-  async function send() {
-    const question = input.trim();
+  async function send(textArg?: string) {
+    const question = (textArg ?? input).trim();
     if (!question || sending) return;
     setInput("");
     setSending(true);
@@ -152,6 +157,22 @@ export function ChatPanel({
           </div>
         ))}
       </div>
+
+      {showChips ? (
+        <div className="flex flex-wrap gap-2 pt-3">
+          {suggestedQuestions.map((q) => (
+            <button
+              key={q}
+              type="button"
+              onClick={() => send(q)}
+              disabled={sending}
+              className="rounded-full border border-border bg-background px-3 py-1.5 text-sm text-ink transition-colors hover:border-ink/20 hover:bg-muted disabled:opacity-50"
+            >
+              {q}
+            </button>
+          ))}
+        </div>
+      ) : null}
 
       <form
         onSubmit={(e) => {

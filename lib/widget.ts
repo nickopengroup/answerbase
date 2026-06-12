@@ -8,6 +8,7 @@ export interface WidgetBot {
   accentColor: string;
   workspaceId: string;
   plan: Plan;
+  suggestedQuestions: string[];
 }
 
 // Public tokens are base64url from 16 random bytes (~22 chars).
@@ -26,7 +27,9 @@ export async function resolveWidgetBot(
 
   const { data: bot } = await admin
     .from("bots")
-    .select("id, name, welcome_message, accent_color, workspace_id")
+    .select(
+      "id, name, welcome_message, accent_color, workspace_id, suggested_questions",
+    )
     .eq("public_token", token)
     .single();
   if (!bot) return null;
@@ -44,6 +47,7 @@ export async function resolveWidgetBot(
     accentColor: bot.accent_color,
     workspaceId: bot.workspace_id,
     plan: (ws?.plan ?? "free") as Plan,
+    suggestedQuestions: (bot.suggested_questions as string[]) ?? [],
   };
 }
 

@@ -23,7 +23,7 @@ Answerbase lets a bookkeeping firm turn its internal documents into a client-fac
 ## Core user journeys
 
 ### J1 — Create a bot (owner)
-Sign up → create bot → upload documents (PDF, MD, TXT) → documents get processed (visible status: parsing → indexing → ready) → test the bot in the in-app chat → answers cite source documents.
+Sign up → "Create bot" launches a 3-step wizard: **upload documents** (processing runs in the background with visible status) → **make it yours** (name, welcome message, and accent color arrive prefilled — the name from the content/filename, the welcome auto-generated from the document topics) → **try it** (an embedded test chat with one-click suggested-question chips that stream a cited answer). Goal: from "Create bot" to a streamed, cited answer in under 2 minutes with zero guesswork. The wizard is dismissible at any point; whatever was created persists.
 
 ### J2 — Ask a question (end user)
 Open the firm's website → widget bubble in the corner → ask a question → get an answer with sources within a few seconds → if the answer is not in the knowledge base, the bot says so honestly instead of guessing.
@@ -45,6 +45,8 @@ Hit a Free plan limit (clear in-app message, no dead ends) → pricing page → 
 |---|---|
 | Auth + workspace | Supabase Auth, email + password is enough |
 | Bot CRUD | Name, accent color, welcome message |
+| Onboarding wizard | 3-step bot creation (upload → personalize → try); name + welcome auto-prefilled from the documents |
+| Suggested questions | Generated from the docs; shown in the wizard, the in-app test chat, and the widget; one click sends a cited answer |
 | Document upload & processing | PDF / MD / TXT, processing status visible per document |
 | RAG chat (in-app) | Answers with source citations, honest "I don't know" fallback |
 | Embeddable widget | One script tag, iframe-based, token-scoped to one bot |

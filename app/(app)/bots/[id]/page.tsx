@@ -96,7 +96,11 @@ export default async function BotPage({
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <ChatPanel botId={bot.id} welcomeMessage={bot.welcome_message} />
+            <ChatPanel
+              botId={bot.id}
+              welcomeMessage={bot.welcome_message}
+              suggestedQuestions={bot.suggested_questions ?? []}
+            />
           </CardContent>
         </Card>
 

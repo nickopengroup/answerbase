@@ -26,6 +26,7 @@ export async function GET(
       welcomeMessage: bot.welcomeMessage,
       accentColor: bot.accentColor,
       plan: bot.plan,
+      suggestedQuestions: bot.suggestedQuestions,
     },
     { headers: CORS },
   );

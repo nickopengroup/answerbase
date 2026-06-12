@@ -1,8 +1,17 @@
 import Link from "next/link";
-import { Bot as BotIcon } from "lucide-react";
+import { Bot as BotIcon, Plus } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import type { Bot } from "@/lib/types";
-import { CreateBotDialog } from "./create-bot-dialog";
+import { Button } from "@/components/ui/button";
+
+function NewBotButton() {
+  return (
+    <Button render={<Link href="/bots/new" />}>
+      <Plus className="size-4" />
+      New bot
+    </Button>
+  );
+}
 
 export default async function DashboardPage() {
   const supabase = await createClient();
@@ -23,7 +32,7 @@ export default async function DashboardPage() {
             Each bot answers from the documents you give it.
           </p>
         </div>
-        {hasBots ? <CreateBotDialog /> : null}
+        {hasBots ? <NewBotButton /> : null}
       </header>
 
       {!hasBots ? (
@@ -69,7 +78,7 @@ function EmptyState() {
         your documents in the next step.
       </p>
       <div className="mt-6">
-        <CreateBotDialog />
+        <NewBotButton />
       </div>
     </div>
   );

@@ -50,6 +50,15 @@ export function DocumentsPanel({
     return () => clearInterval(timer);
   }, [pending, refresh]);
 
+  // Regenerate the welcome + suggested questions once processing settles.
+  const wasPending = useRef(false);
+  useEffect(() => {
+    if (wasPending.current && !pending && documents.some((d) => d.status === "ready")) {
+      void fetch(`/api/bots/${botId}/generate-intro`, { method: "POST" });
+    }
+    wasPending.current = pending;
+  }, [pending, documents, botId]);
+
   async function handleFiles(files: FileList | null) {
     if (!files || files.length === 0) return;
     setUploading(true);
@@ -88,6 +97,7 @@ export function DocumentsPanel({
     const res = await fetch(`/api/documents/${id}`, { method: "DELETE" });
     if (res.ok) {
       setDocuments((docs) => docs.filter((d) => d.id !== id));
+      void fetch(`/api/bots/${botId}/generate-intro`, { method: "POST" });
     } else {
       toast.error("We couldn't delete that document.");
     }

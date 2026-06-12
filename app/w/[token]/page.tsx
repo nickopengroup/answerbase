@@ -30,6 +30,7 @@ export default async function WidgetPage({
       welcomeMessage={bot.welcomeMessage}
       accentColor={bot.accentColor}
       showPoweredBy={bot.plan === "free"}
+      suggestedQuestions={bot.suggestedQuestions}
     />
   );
 }
