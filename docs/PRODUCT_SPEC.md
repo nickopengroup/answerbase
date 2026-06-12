@@ -46,7 +46,7 @@ Hit a Free plan limit (clear in-app message, no dead ends) → pricing page → 
 | Auth + workspace | Supabase Auth, email + password is enough |
 | Bot CRUD | Name, accent color, welcome message |
 | Onboarding wizard | 3-step bot creation (upload → personalize → try); name + welcome auto-prefilled from the documents |
-| Suggested questions | Generated from the docs; shown in the wizard, the in-app test chat, and the widget; one click sends a cited answer |
+| Suggested questions | Generated from the docs and **owner-editable** (edit / remove / add / regenerate on the bot page); shown in the wizard, the in-app test chat, and the widget; one click sends a cited answer |
 | Document upload & processing | PDF / MD / TXT, processing status visible per document |
 | RAG chat (in-app) | Answers with source citations, honest "I don't know" fallback |
 | Embeddable widget | One script tag, iframe-based, token-scoped to one bot |

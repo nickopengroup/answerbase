@@ -173,6 +173,37 @@ export async function updateBot(
   return { ok: true };
 }
 
+const questionsSchema = z
+  .array(z.string().trim().min(1).max(140))
+  .max(6, "You can have up to 6 suggested questions.");
+
+export async function updateSuggestedQuestions(
+  botId: string,
+  questions: string[],
+): Promise<{ error?: string; ok?: boolean }> {
+  if (!z.string().uuid().safeParse(botId).success) {
+    return { error: "This bot no longer exists." };
+  }
+  const parsed = questionsSchema.safeParse(
+    questions.map((q) => q.trim()).filter(Boolean),
+  );
+  if (!parsed.success) {
+    return { error: parsed.error.issues[0].message };
+  }
+
+  const supabase = await createClient();
+  const { error } = await supabase
+    .from("bots")
+    .update({ suggested_questions: parsed.data })
+    .eq("id", botId);
+  if (error) {
+    return { error: "We couldn't save your questions. Please try again." };
+  }
+
+  revalidatePath(`/bots/${botId}`);
+  return { ok: true };
+}
+
 export async function deleteBot(formData: FormData) {
   const botId = String(formData.get("botId"));
   if (!z.string().uuid().safeParse(botId).success) {

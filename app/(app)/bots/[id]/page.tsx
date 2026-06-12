@@ -14,6 +14,7 @@ import { DocumentsPanel } from "@/components/app/documents-panel";
 import { ChatPanel } from "@/components/app/chat-panel";
 import { EmbedSnippet } from "@/components/app/embed-snippet";
 import { GapsPanel, type Gap } from "@/components/app/gaps-panel";
+import { SuggestedQuestionsEditor } from "@/components/app/suggested-questions-editor";
 import { EditBotForm } from "./edit-bot-form";
 import { DeleteBotButton } from "./delete-bot-button";
 
@@ -100,6 +101,21 @@ export default async function BotPage({
               botId={bot.id}
               welcomeMessage={bot.welcome_message}
               suggestedQuestions={bot.suggested_questions ?? []}
+            />
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Suggested questions</CardTitle>
+            <CardDescription>
+              Example questions your visitors can tap to get started.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <SuggestedQuestionsEditor
+              botId={bot.id}
+              initial={bot.suggested_questions ?? []}
             />
           </CardContent>
         </Card>
