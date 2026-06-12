@@ -94,7 +94,13 @@ export async function POST(request: Request) {
   }
 
   const admin = createAdminClient();
-  const path = `${botId}/${doc.id}/${file.name}`;
+  // Use a safe storage key — the real filename can contain non-ASCII,
+  // spaces, or brackets that Supabase Storage rejects in object keys. The
+  // original name is kept in documents.filename for display.
+  const ext = file.name.includes(".")
+    ? file.name.split(".").pop()!.toLowerCase().replace(/[^a-z0-9]/g, "")
+    : "bin";
+  const path = `${botId}/${doc.id}/file.${ext || "bin"}`;
   const bytes = new Uint8Array(await file.arrayBuffer());
   const { error: uploadError } = await admin.storage
     .from("documents")
