@@ -143,7 +143,7 @@ export function DocumentsPanel({
                   {doc.filename}
                 </p>
                 {doc.status === "error" && doc.error_message ? (
-                  <p className="truncate text-xs text-danger">
+                  <p className="text-xs leading-snug text-danger">
                     {doc.error_message}
                   </p>
                 ) : (
