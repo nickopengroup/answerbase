@@ -2,7 +2,8 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import { parseDocument, type ParseKind } from "./parsing";
 import { chunkText } from "./chunking";
 import { embedBatched } from "./embeddings";
-import type { DocumentRow } from "./types";
+import { getUsage, planLimit } from "./limits";
+import type { DocumentRow, Plan } from "./types";
 
 interface ProcessResult {
   status: "ready" | "error";
@@ -52,6 +53,25 @@ export async function processDocument(
       bytes,
     );
 
+    // Enforce the page limit against the document's real (post-parse) size,
+    // so a single large file can't sail past the upload-time check.
+    const { data: botRow } = await db
+      .from("bots")
+      .select("workspace_id, workspaces!inner(plan)")
+      .eq("id", doc.bot_id)
+      .single();
+    if (botRow) {
+      const plan = (botRow.workspaces as unknown as { plan: Plan }).plan;
+      const usage = await getUsage(db, botRow.workspace_id as string);
+      const otherPages = usage.pages - (doc.page_count ?? 0);
+      const limit = planLimit(plan, "pages");
+      if (otherPages + pageCount > limit) {
+        throw new Error(
+          `This document is ${pageCount} pages, which is over your plan's ${limit}-page limit. Upgrade to Pro or upload a smaller file.`,
+        );
+      }
+    }
+
     await db
       .from("documents")
       .update({ page_count: pageCount, status: "indexing" })
@@ -79,6 +99,7 @@ export async function processDocument(
         .from("chunks")
         .insert(rows.slice(i, i + 100));
       if (insertError) {
+        console.error("chunk insert failed:", insertError);
         throw new Error("We couldn't save the indexed content. Please retry.");
       }
     }
@@ -94,9 +115,11 @@ export async function processDocument(
       err instanceof Error
         ? err.message
         : "Something went wrong while processing this file.";
+    // An errored document consumes no pages — reset the count so a failed
+    // upload doesn't inflate usage.
     await db
       .from("documents")
-      .update({ status: "error", error_message: message })
+      .update({ status: "error", error_message: message, page_count: 0 })
       .eq("id", documentId);
     return { status: "error", error: message };
   }

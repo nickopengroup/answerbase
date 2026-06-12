@@ -7,6 +7,17 @@ export interface ParsedDocument {
   pageCount: number;
 }
 
+// Strip NUL and other C0 control characters (the range keeps tab and newline)
+// that Postgres `text` can't store. PDF extraction — especially of non-Latin
+// documents — often yields these, which made the chunk insert fail with
+// "unsupported Unicode escape sequence". The regex is built from a string
+// literal so the source stays printable.
+const CONTROL_CHARS = new RegExp("[\\u0000-\\u0008\\u000B-\\u001F]", "g");
+
+function sanitizeText(text: string): string {
+  return text.replace(CONTROL_CHARS, "");
+}
+
 /** Map a filename to a supported kind, or null if unsupported. */
 export function kindFromFilename(filename: string): ParseKind | null {
   const ext = filename.toLowerCase().split(".").pop();
@@ -37,7 +48,7 @@ export async function parseDocument(
         "We couldn't read this file. It may be corrupted or password-protected.",
       );
     }
-    const clean = text.trim();
+    const clean = sanitizeText(text).trim();
     if (!clean) {
       throw new Error(
         "We couldn't read any text from this PDF. If it's a scanned image, it won't work yet.",
@@ -46,7 +57,7 @@ export async function parseDocument(
     return { text: clean, pageCount: totalPages };
   }
 
-  const clean = new TextDecoder().decode(bytes).trim();
+  const clean = sanitizeText(new TextDecoder().decode(bytes)).trim();
   if (!clean) {
     throw new Error("This file looks empty. Please upload a file with text.");
   }
