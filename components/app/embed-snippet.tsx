@@ -27,14 +27,16 @@ export function EmbedSnippet({
 
   return (
     <div className="flex flex-col gap-3">
-      <div className="relative overflow-x-auto rounded-lg bg-ink p-4">
-        <code className="block whitespace-pre font-mono text-xs leading-relaxed text-zinc-100">
-          {snippet}
-        </code>
+      <div className="relative rounded-lg bg-ink">
+        <div className="overflow-x-auto p-4 pr-20">
+          <code className="block whitespace-pre font-mono text-xs leading-relaxed text-zinc-100">
+            {snippet}
+          </code>
+        </div>
         <button
           onClick={copy}
           aria-label="Copy embed code"
-          className="absolute right-2 top-2 flex items-center gap-1.5 rounded-md bg-white/10 px-2 py-1 text-xs text-zinc-100 transition-colors hover:bg-white/20"
+          className="absolute right-2 top-2 flex items-center gap-1.5 rounded-md bg-zinc-700 px-2 py-1 text-xs text-zinc-100 shadow-sm transition-colors hover:bg-zinc-600"
         >
           {copied ? (
             <Check className="size-3.5" />
